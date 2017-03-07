@@ -26,7 +26,7 @@ public class LineChartView extends FrameLayout {
 
     public LineChartView(Context context) {
 
-        super(context, null);
+        this(context, null);
 
     }
 

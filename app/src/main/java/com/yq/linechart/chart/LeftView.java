@@ -12,7 +12,7 @@ import android.util.AttributeSet;
 public class LeftView extends BaseChartView {
 
     public LeftView(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public LeftView(Context context, AttributeSet attrs) {

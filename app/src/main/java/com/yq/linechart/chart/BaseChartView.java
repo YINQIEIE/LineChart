@@ -48,7 +48,7 @@ public class BaseChartView extends View {
     protected int baseLineY = 0;
 
     public BaseChartView(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public BaseChartView(Context context, AttributeSet attrs) {

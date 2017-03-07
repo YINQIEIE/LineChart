@@ -49,7 +49,7 @@ public class ScrollChartView extends BaseChartView {
     private Point endPoint;//滑过边界时需要回到的位置坐标点
 
     public ScrollChartView(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public ScrollChartView(Context context, AttributeSet attrs) {

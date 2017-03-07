@@ -29,7 +29,7 @@ public class NoScrollChartView extends BaseChartView {
     private List<Integer> bgPosList;//背景位置，测试用
 
     public NoScrollChartView(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public NoScrollChartView(Context context, AttributeSet attrs) {

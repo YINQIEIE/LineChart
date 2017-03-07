@@ -39,7 +39,7 @@ public class ChartViewContainer extends FrameLayout {
     private ScrollChartView.ScrollToListener scrollToListener;//scrollTo监听
 
     public ChartViewContainer(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public ChartViewContainer(Context context, AttributeSet attrs) {

@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 public class TopView extends BaseChartView {
 
     public TopView(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public TopView(Context context, AttributeSet attrs) {
