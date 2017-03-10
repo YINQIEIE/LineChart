@@ -1,7 +1,6 @@
 package com.yq.linechart.chart;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
 
@@ -27,7 +26,13 @@ public class LeftView extends BaseChartView {
 
     }
 
-    @Override
+//    @Override
+//    protected void initSize() {
+//        super.initSize();
+//        colWidth = dp2px(50);
+//    }
+
+   /* @Override
     protected void onDraw(Canvas canvas) {
 
         for (int i = 0; i < rowNum + 1; i++) {//横线
@@ -40,6 +45,6 @@ public class LeftView extends BaseChartView {
 
         canvas.drawLine(colWidth, 2, colWidth, rowHeight * rowNum + 2, linePaint);//竖线
 
-    }
+    }*/
 
 }

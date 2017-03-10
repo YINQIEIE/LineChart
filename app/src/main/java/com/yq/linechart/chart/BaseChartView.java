@@ -23,9 +23,9 @@ public class BaseChartView extends View {
 
     protected int colNum = 0;//列数
 
-    protected int rowHeight = 30;//行高
+    protected int rowHeight = 0;//行高
 
-    protected int colWidth = 30;//列宽
+    protected int colWidth = 0;//列宽
 
     /**
      * 画笔
@@ -88,15 +88,31 @@ public class BaseChartView extends View {
 
         metrics = textPaint.getFontMetrics();
 
+//        initSize();
+
+    }
+
+    /**
+     * 初始化行高列宽
+     */
+    protected void initSize() {
         //初始化行高列宽
         rowHeight = dp2px(rowHeight);
 
         colWidth = dp2px(colWidth);
 
         log(String.format("rowHeight=%d;colWidth=%d", rowHeight, colWidth));
-
     }
 
+    public void setSize(int colWidth, int rowHeight) {
+
+        this.colWidth = colWidth;
+
+        this.rowHeight = rowHeight;
+
+        invalidate();
+
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -118,6 +134,8 @@ public class BaseChartView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+        if (rowHeight == 0 || colWidth == 0) return;
 
         if (colNum == 0 || colNum == 0) return;
 

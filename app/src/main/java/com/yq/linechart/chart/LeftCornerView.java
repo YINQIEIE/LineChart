@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 public class LeftCornerView extends BaseChartView {
 
     public LeftCornerView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public LeftCornerView(Context context, AttributeSet attrs) {
@@ -20,4 +20,5 @@ public class LeftCornerView extends BaseChartView {
         rowNum = 1;
         colNum = 1;
     }
+
 }

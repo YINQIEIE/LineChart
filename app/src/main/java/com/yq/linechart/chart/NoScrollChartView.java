@@ -88,6 +88,15 @@ public class NoScrollChartView extends BaseChartView {
     }
 
     @Override
+    public void setSize(int colWidth, int rowHeight) {
+
+        super.setSize(colWidth, rowHeight);
+
+        radius = Math.min(rowHeight, colWidth) / 2 - 2;
+
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         setMeasuredDimension(colWidth * colNum, rowHeight * rowNum);
@@ -98,6 +107,10 @@ public class NoScrollChartView extends BaseChartView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+        if (rowHeight == 0 || colWidth == 0) return;
+
+        if (colNum == 0 || colNum == 0) return;
 
         super.onDraw(canvas);
 
