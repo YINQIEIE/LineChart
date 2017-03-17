@@ -1,6 +1,7 @@
 package com.yq.linechart.chart;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
 
@@ -15,10 +16,26 @@ public class LeftCornerView extends BaseChartView {
     }
 
     public LeftCornerView(Context context, AttributeSet attrs) {
+
         super(context, attrs);
-        setBackgroundColor(Color.parseColor("#6633B5E5"));
+
         rowNum = 1;
+
         colNum = 1;
+
+        rectPaint.setColor(Color.TRANSPARENT);
+
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+
+        super.onDraw(canvas);
+
+        float textWid = textPaint.measureText("期号");
+
+        baseLineY = rowHeight / 2 - (int) (metrics.ascent) / 2;
+
+        canvas.drawText("期号", viewWidth / 2 - textWid / 2, baseLineY, textPaint);
+    }
 }

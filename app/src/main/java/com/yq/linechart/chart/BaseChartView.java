@@ -4,9 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yinqi on 2017/2/28.
@@ -47,6 +52,12 @@ public class BaseChartView extends View {
 
     protected int baseLineY = 0;
 
+    protected DecimalFormat df = new DecimalFormat("00");
+
+    protected Paint rectPaint;
+
+    protected List<String> list = new ArrayList<>();//数据
+
     public BaseChartView(Context context) {
         this(context, null);
     }
@@ -67,7 +78,7 @@ public class BaseChartView extends View {
         //初始化线的画笔
         linePaint = new Paint();
 
-        linePaint.setColor(Color.BLACK);
+        linePaint.setColor(0x66333333);
 
         linePaint.setStrokeWidth(1.0f);
 
@@ -87,6 +98,14 @@ public class BaseChartView extends View {
         textPaint.setAntiAlias(true);
 
         metrics = textPaint.getFontMetrics();
+
+
+        //背景画笔
+        rectPaint = new Paint();
+
+        rectPaint.setAntiAlias(true);
+
+        rectPaint.setStyle(Paint.Style.FILL);
 
 //        initSize();
 
@@ -110,7 +129,15 @@ public class BaseChartView extends View {
 
         this.rowHeight = rowHeight;
 
+        setMeasuredDimension(colWidth * colNum, Math.min(rowHeight * rowNum, getMeasuredHeight()));
+
         invalidate();
+
+    }
+
+    public void setTextColor(int color) {
+
+        textPaint.setColor(color);
 
     }
 
@@ -119,9 +146,9 @@ public class BaseChartView extends View {
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        viewWidth = getWidth();
+        viewWidth = getMeasuredWidth();
 
-        viewHeight = getHeight();
+        viewHeight = getMeasuredHeight();
 
         largestDeltaX = colWidth * colNum - viewWidth;
 
@@ -137,13 +164,12 @@ public class BaseChartView extends View {
 
         if (rowHeight == 0 || colWidth == 0) return;
 
-        if (colNum == 0 || colNum == 0) return;
+        if (rowNum == 0 || colNum == 0) return;
 
-        super.onDraw(canvas);
+        drawRect(canvas);
 
         for (int i = 0; i < colNum + 1; i++) {//竖线
 
-//            canvas.drawLine(colWidth * i + 2 * (i + 1), 2, colWidth * i + 2 * (i + 1), rowHeight * rowNum, linePaint);//竖线
             canvas.drawLine(colWidth * i, 0, colWidth * i, rowHeight * rowNum, linePaint);//竖线
 
         }
@@ -156,6 +182,14 @@ public class BaseChartView extends View {
 
     }
 
+    protected void drawRect(Canvas canvas) {
+
+        Rect rect = new Rect(0, 0, colWidth * colNum, rowNum * rowHeight);
+
+        canvas.drawRect(rect, rectPaint);
+
+    }
+
     protected int dp2px(int dp) {
 
         return (int) (dp * getContext().getResources().getDisplayMetrics().density);
@@ -165,6 +199,18 @@ public class BaseChartView extends View {
     protected void log(String msg) {
 
         Log.i(TAG, msg);
+    }
+
+    public void notifyDataChanged(List<String> list) {
+
+        this.list.clear();
+
+        this.list.addAll(list);
+
+        rowNum = list.size();
+
+        invalidate();
+
     }
 
 }

@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by yinqi on 2017/2/28.
@@ -24,9 +23,7 @@ public class NoScrollChartView extends BaseChartView {
 
     private int radius;//背景圆半径
 
-    private Random random = new Random();//生成需要添加圆形背景的位置
-
-    private List<Integer> bgPosList;//背景位置，测试用
+    private List<List<String>> missList = new ArrayList<>();
 
     public NoScrollChartView(Context context) {
         this(context, null);
@@ -40,23 +37,14 @@ public class NoScrollChartView extends BaseChartView {
 
         colNum = 24;
 
-        setBackgroundColor(Color.parseColor("#6633B5E5"));
-
-        //随机生成要添加背景的位置
-        bgPosList = new ArrayList<>();
-
-        for (int i = 0; i < rowNum; i++) {
-
-            bgPosList.add(random.nextInt(colNum));
-
-        }
-
     }
 
     @Override
     protected void init() {
 
         super.init();
+
+        rectPaint.setColor(Color.parseColor("#FFF2F2F2"));
 
         initPaints();
 
@@ -66,10 +54,13 @@ public class NoScrollChartView extends BaseChartView {
      * 初始化画笔
      */
     private void initPaints() {
+
+        textPaint.setColor(Color.parseColor("#FF999999"));
+
         //背景画笔
         bgPaint = new Paint();
 
-        bgPaint.setColor(Color.GREEN);
+        bgPaint.setColor(Color.parseColor("#FFF64646"));
 
         bgPaint.setAntiAlias(true);
 
@@ -87,17 +78,20 @@ public class NoScrollChartView extends BaseChartView {
         radius = Math.min(rowHeight, colWidth) / 2 - 2;
     }
 
-    @Override
-    public void setSize(int colWidth, int rowHeight) {
+    public void setSize(int colWidth, int rowHeight, int colNum) {
 
-        super.setSize(colWidth, rowHeight);
+        this.colNum = colNum;
 
         radius = Math.min(rowHeight, colWidth) / 2 - 2;
+
+        setSize(colWidth, rowHeight);
 
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         setMeasuredDimension(colWidth * colNum, rowHeight * rowNum);
 
@@ -110,13 +104,12 @@ public class NoScrollChartView extends BaseChartView {
 
         if (rowHeight == 0 || colWidth == 0) return;
 
-        if (colNum == 0 || colNum == 0) return;
-
         super.onDraw(canvas);
 
         drawText(canvas);
 
     }
+
 
     /**
      * 画号码和号码之间的连线
@@ -125,43 +118,80 @@ public class NoScrollChartView extends BaseChartView {
      */
     private void drawText(Canvas canvas) {
 
+        if (missList.isEmpty()) return;
+
+        String text;
+
         for (int i = 0; i < rowNum; i++) {//画文字
 
             //画文字
             baseLineY = rowHeight * i + rowHeight / 2 - (int) (metrics.ascent) / 2;
 
-//            log(String.format("baseLineY = %d", baseLineY));
-
             for (int j = 0; j < colNum; j++) {//画第i行每一列的字符
 
-                float textWid = textPaint.measureText(j + i + 1 + "");//测量字符宽度
+                text = missList.get(i).get(j);
 
-                textPaint.setColor(Color.BLACK);//文字有背景时要变为白色，其他为黑色
+                float textWid = textPaint.measureText(text);//测量字符宽度
 
-                int bgPos = bgPosList.get(i);//需要添加背景的文字
+                textPaint.setColor(Color.parseColor("#FF999999"));//文字有背景时要变为白色，其他为黑色
 
-                if (j == bgPos) {//先画圆，再画文字，否则圆遮挡文字
+                if ("0".equals(text)) {//先画圆，再画文字，否则圆遮挡文字
 
-                    //先画线 第i行 第j列
-                    if (i != rowNum - 1) {//画有背景位置之间的连线
+//                    //先画线 第i行 第j列
+//                    if (i != rowNum - 1) {//画有背景位置之间的连线
+//
+//                        int nextBgPos = bgPosList.get(i + 1);
+//
+//                        canvas.drawLine(j * colWidth + colWidth / 2, rowHeight * i + rowHeight / 2, nextBgPos * colWidth + colWidth / 2, rowHeight * (i + 1) + rowHeight / 2, mPaint);
+//
+//                    }
 
-                        int nextBgPos = bgPosList.get(i + 1);
-
-                        canvas.drawLine(j * colWidth + colWidth / 2, rowHeight * i + rowHeight / 2, nextBgPos * colWidth + colWidth / 2, rowHeight * (i + 1) + rowHeight / 2, mPaint);
-
-                    }
-
-                    canvas.drawCircle(colWidth * bgPos + colWidth / 2, rowHeight * i + rowHeight / 2, radius, bgPaint);//背景圆
+                    canvas.drawCircle(colWidth * j + colWidth / 2, rowHeight * i + rowHeight / 2, radius, bgPaint);//背景圆
 
                     textPaint.setColor(Color.WHITE);
 
+                    if (!list.isEmpty())
+
+                        text = list.get(j);
+
+                    textWid = textPaint.measureText(text);
+
                 }
 
-                canvas.drawText(j + i + 1 + "", colWidth * j + colWidth / 2 - textWid / 2, baseLineY, textPaint);//号码
+                canvas.drawText(text, colWidth * j + colWidth / 2 - textWid / 2, baseLineY, textPaint);//号码
 
+//                Log.i(TAG, "drawText: for" + i + ">>>" + j + ">>>" + text);
             }
 
         }
+    }
+
+    public void notifyDataSetChanged(List<List<String>> missList) {
+
+        this.missList.clear();
+
+        this.missList.addAll(missList);
+
+        rowNum = missList.size();
+
+        requestLayout();//由于baseChartView里rownum初始化为50，会导致最多只能绘制50行，调用此方法重新设置大小
+
+        setMeasuredDimension(getMeasuredWidth(), rowHeight * rowNum);
+
+        invalidate();
+
+    }
+
+    public void setCircleColor(int color) {
+
+        bgPaint.setColor(color);
+
+    }
+
+    public void setList(List<String> list) {
+
+        this.list.addAll(list);
+
     }
 
 }

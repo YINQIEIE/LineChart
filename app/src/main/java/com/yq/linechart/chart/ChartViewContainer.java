@@ -51,15 +51,30 @@ public class ChartViewContainer extends FrameLayout {
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        viewWidth = getWidth();
+        viewWidth = getMeasuredWidth();
 
-        viewHeight = getHeight();
+        viewHeight = getMeasuredHeight();
 
-        largestDeltaX = Math.abs(viewWidth - getChildAt(0).getWidth());
+        largestDeltaX = Math.abs(viewWidth - getChildAt(0).getMeasuredWidth());
 
-        largestDeltaY = Math.abs(viewHeight - getChildAt(0).getHeight());
+        largestDeltaY = Math.abs(viewHeight - getChildAt(0).getMeasuredHeight());
 
-        Log.i(TAG, "onMeasure: largestDeltaX=" + largestDeltaX + "largestDeltaY=" + largestDeltaY);
+        Log.i(TAG, "onMeasure: largestDeltaX=" + largestDeltaX + "largestDeltaY=" + largestDeltaY + "  viewWidth=" + viewWidth + "  viewHeight=" + viewHeight);
+
+    }
+
+    public void setLargestDeltaX(int largestDeltaX) {
+
+        this.largestDeltaX = largestDeltaX;
+
+        Log.i(TAG, "setLargestDeltaX: largestDeltaX=" + largestDeltaX);
+    }
+
+    public void setLargestDeltaY(int largestDeltaY) {
+
+        this.largestDeltaY = largestDeltaY;
+
+        Log.i(TAG, "setLargestDeltaY: " + "largestDeltaY=" + largestDeltaY);
 
     }
 
@@ -172,8 +187,6 @@ public class ChartViewContainer extends FrameLayout {
      */
     private void move(MotionEvent event) {
 
-        Log.i(TAG, "move: ");
-
         int diffX = (int) (lastX - event.getX());
 
         int diffY = (int) (lastY - event.getY());
@@ -189,8 +202,6 @@ public class ChartViewContainer extends FrameLayout {
         scrollBy(diffX, diffY);
 
         if (null != scrollByListener) scrollByListener.onScroll(diffX, diffY);
-
-        Log.i(TAG, "getScrollX=" + getScrollX() + "  diffX=" + diffX + "   getScrollY=" + getScrollY() + "  diffY=" + diffY);
 
         lastX = event.getX();
 
